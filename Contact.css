@@ -1,0 +1,34 @@
+form {
+    width: 50vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+body {
+    /* background-color: #cacdcfd8; */
+    background: linear-gradient(90deg, #cacdcfd8 20%, #67B7CD 20%, #67B7CD 80%, #cacdcfd8 67%);
+    /* compatibilité opéra */
+    background: -o-linear-gradient(90deg, #cacdcfd8 20%, #67B7CD 20%, #67B7CD 80%, #cacdcfd8 67%);
+}
+input {
+    border-radius: 3px;
+}
+.container-form {
+    height: 100vh;
+}
+.btn_form1 {
+    align-self: self-end;
+    margin-top: 2rem;
+    width: 25%;
+    border-radius: 25px;
+    background-color: #3460A1;
+    border: 1px solid #3460A1;
+    color: aliceblue;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+/* marche que si sur page contact */
+/* ul.third-list a {
+    text-decoration: none;
+    color: white;
+} */

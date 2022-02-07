@@ -1,0 +1,301 @@
+:root {
+    --raj : "Rajdhani", sans-serif;
+    --bg-bleu-fili : #3b8ea59d;
+    --searchBar : 60px;
+    --bg-color-button-index : #67B7CD;
+}
+
+body {
+    font-family: var(--raj)!important;
+    font-size: 1.5rem!important;
+}
+.fs50 {
+    font-size: 50px;
+}
+
+/****************** TOP SEARCH BAR + NOM  */
+.searchBar_input {
+    height: 100px;
+    padding: 0.3rem;
+    background-color: #191516;
+    width: auto;
+}
+.searchBar_input .input-group {
+    max-width: inherit!important;
+}
+header{
+    height: 50vh;
+    background: url(Img/photoheader.png), #C4C4C4;
+    background-size: 100vw;
+    background-position: bottom ;
+    background-repeat: no-repeat;
+}
+@media screen and (max-width: 970px) {
+	header {
+		background-position:center;
+        background-size: cover;
+	}
+}
+.titre_searchBar {
+    color: white;
+    background-color: var(--bg-bleu-fili);
+    font-size: 35px;
+    letter-spacing: 0.2rem;
+}
+.searchBar {
+    margin : 0;
+    justify-content: center;
+    padding-top: 10%;
+}
+.searchBar_input img {
+    height: 80px;
+}
+.searchBar_input a {
+    padding: 0;
+}
+.searchBar_input span {
+    color: white;
+    text-align: right;
+    font-size: 15px;
+    padding-right: 170px;
+    margin-top: -15px;
+}
+.form-control {
+    font-size: inherit!important;
+}
+header a {
+    text-decoration: none;
+    color: white;
+}
+header a:hover {
+    color: wheat;
+}
+input.form-control {
+    height: var(--searchBar) ;
+}
+.loupe {
+    background-color: white!important;
+    height: var(--searchBar) ;
+}
+.loupe img {
+    height: var(--searchBar) ;
+    width: var(--searchBar) ;
+}
+
+
+
+
+/**************************************** BODY */
+
+/********** Nav bar menu */
+ul.navbar-nav {
+    width: 75vw;
+    justify-content: space-around;
+    align-items: center;
+}
+ul.navbar-nav li {
+    text-align: center;
+    width: 200px;
+    font-size: 30px;
+    background-color: var(--bg-color-button-index) ;
+}
+ul.navbar-nav li>a:first-child {
+    color: white!important;
+}
+.dropdown-item {
+    font-weight: 500!important;
+    font-size: 17px;
+}
+
+/* en un clic */
+.infos-click > div {
+    text-align: center;
+}
+
+@media screen and (max-width: 1200px) {
+	.corner {
+		display: none;
+	}
+}
+
+
+/************ Actu */
+.img {
+    background-image: url(Img/actu.png);
+    background-size: cover;
+    height: auto;
+    width: 40%;
+    background-repeat: no-repeat;
+}
+.bloc_link {
+    width: 50%;
+}
+.bloc_link .row {
+    margin-left: auto;
+    margin-top: 1.5rem;
+}
+
+
+/* Slider Nouveautés */
+.slick-carousel .slick-track {
+    display: flex;
+}
+.slick-carousel .slick-track img {
+    height: 15rem;
+}
+.container-slick {
+    padding: 1rem;
+    overflow: hidden;
+    background-color: #cacdcfab ;
+}
+
+/* carousel Event */
+.carousel-item.active {
+    display: flex!important;
+    flex-direction: row;
+}
+.carousel-inner h4 {
+    color: #3D7888;
+    text-shadow: 1px 1px 3px black;
+}
+.bloc-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+}
+.carousel {
+    background-color: aliceblue;
+}
+.date {
+    display: inline-block;
+    background-color: transparent;
+    border-radius: 10px;
+    border: 2px solid #549aad;
+    color: #549aad;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 500;
+    padding: 10px;
+    width: 75%;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+}
+@media screen and (max-width: 1200px) {
+	.img-event {
+		display: none;
+	}
+}
+
+
+
+                /* précédent et suivant */
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: #cacdcfd8;
+    border-radius: 50%;
+    background-size: 50% 50%!important;
+    width: 3rem!important;
+    height: 3rem!important;
+}
+.carousel-control-next-icon {
+    position: absolute;
+    right: inherit;
+}
+.carousel-control-prev-icon {
+    position: absolute;
+    left: 25px;
+}
+
+/* Top lectures */
+.topreading {
+    background-color: #67B7CD;
+}
+.titre-topreading {
+    background-color: white;
+    width: 80.7vw;
+    font-size: 50px;
+    text-transform: uppercase;
+    text-align: center;
+    color: #67B7CD;
+}
+        /* card topreading */
+        .card-text {
+            font-size:1rem;
+        }
+        .card {
+            border-radius: 25px!important;
+            border: 2px solid black!important;
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .btn-livre {
+            text-decoration: none;
+            color: black;
+            background-color:#67B7CD;
+            border-radius: 20px;
+            align-self: flex-end;
+            padding: 0.3rem;
+            font-size: 1rem;
+        }
+
+        /* catégorie side bar */
+        .categories span {
+            font-size:35px;
+            text-transform: uppercase;
+        }
+        .categories li a {
+            text-decoration: none;
+            color: black;
+        }
+        .categories {
+            list-style-type: none;
+            line-height:50px;
+        }
+
+        
+/* FOOTER */
+
+footer {
+    background-image: url(Img/footer.png);
+    background-size: cover;
+    margin-top: 5rem;
+    color: white;
+}
+.fab {
+    color: white;
+    font-size:50px;
+}
+footer ul {
+    list-style-type: none;
+}
+footer h3 {
+    margin-bottom:2rem;
+}
+.first {
+    line-height:2;
+}
+ul.third-list a {
+    text-decoration: none;
+    color: white;
+}
+.third-list {
+    padding-left:inherit;
+}
+/* map footer */
+.second iframe {
+    width: 300px;
+    height: 200px;
+}
+@media screen and (max-width: 700px) {
+	.second iframe {
+		width: 200px!important;
+	}
+}
