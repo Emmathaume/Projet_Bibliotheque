@@ -1,4 +1,5 @@
 <?php session_start(); ?>
+<?php include 'config/config.php'; ?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -12,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> 
     <!-- STYLE CSS -->
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="<?= URL_ADMIN?>css/login.css">
     <title>Se Connecter</title>
 </head>
 <body class="m-0">
@@ -20,7 +21,7 @@
     <div class="content-container">
         <div class="wrap-container">
 
-            <form action="js/login.php" method="POST" onsubmit="return validateForm()">
+            <form action="<?= URL_ADMIN?>js/login.php" method="POST" onsubmit="return validateForm()">
                 <div class="login-form-title mb-30">
                     Connexion
                 </div>

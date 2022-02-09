@@ -1,5 +1,7 @@
+<!-- CONFIG -->
+<?php include '../config/config.php'; ?>
 <!-- connexion a la bdd -->
-<?php include '../bdd.php';?>
+<?php include PATH_ADMIN .'bdd.php';?>
 
 
 <!-- AJOUT USAGER EN BDD -->
@@ -13,7 +15,7 @@
         $prenom = htmlentities($_POST["prenom"]);
         $adresse = htmlentities($_POST["adresse"]);
         $ville = htmlentities($_POST["ville"]);
-        $code_postal = htmlentities($_POST["code_postal"]);
+        $code_postal = intval($_POST["code_postal"]);
         $mail = htmlentities($_POST["mail"]);
 
         // FAIRE LE TTMNT DES DONNES (TAILLE CARACTERE ect...)
@@ -35,7 +37,6 @@
             ':mail'=> $mail,
         );
         // EXECUTER REQUETE DANS UNE CONDITIONS POUR VERIFIER SI OK POUR REDIRECTION
-        
 
         if (!$requete->execute($data)) {
             // erreur donc redirection vers form d'ajout
