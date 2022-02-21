@@ -4,8 +4,6 @@
      <meta charset="UTF-8">
      <meta http-equiv="X-UA-Compatible" content="IE=edge">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <!-- reset le css -->
-     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jgthms/minireset.css@master/minireset.min.css"> -->
      <!-- Fontawesome -->
      <script src="https://kit.fontawesome.com/7e0d33e192.js" crossorigin="anonymous"></script>
      <!-- Slick -->
@@ -50,13 +48,11 @@
                                 <a class="nav-link" href="#">Ressources</a>
                             </li>
                         </ul>
-                    <!-- </div> -->
             </nav>
 
             <!-- Actus + en un clic -->
             <div class="container row mx-auto mt-5">
                 <div class="col-xl-6 col-md-0 img">
-                    <!-- <span></span> -->
                 </div>
                 <div class="col-xl-6 col-md-12">
                     <div class="row">
@@ -114,11 +110,7 @@
 
             <!-- Slider Events -->
             <div id="carouselExampleIndicators" class="carousel mb-5 container-fluid" data-ride="carousel">
-                <!-- <ol class="carousel-indicators">
-                  <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                  <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                  <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                </ol> -->
+
                 <div class="d-block w-100 carousel-inner">
 
                     <div class="carousel-item active">
@@ -163,16 +155,10 @@
 
                 </div>
 
-
-
-
-
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <!-- <span class="sr-only">Previous</span> -->
                 </a>
                 <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                    <!-- <span class="sr-only">Next</span> -->
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 </a>
             </div>
@@ -231,13 +217,9 @@
      
 
 <script src="indexjs.js"></script>
-<!-- JQUERY  désactiver car disabled drop down menu bootstrap -->
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
 <!-- Popper -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>  -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 <!-- SLICK -->

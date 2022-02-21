@@ -3,39 +3,31 @@
 
 <!-- connexion a la bdd -->
 <?php include '../bdd.php';?>
-
-<?php 
-    // VERIFIE SI ON A UN ID EN GET 
-    if (isset($_GET['id'])) {
-    //    var_dump($_GET['id']);
-       
-        // enregistre l'infos (intval passe a zero si c'est une string)
-        $id = intval($_GET['id']);
-        // si notre id est sup a zero on peut travailler avc
-        if ($id > 0) {
-            // REQUETE SQL POUR RECUPERER L'USAGER EN BDD
-            $sql = "SELECT * FROM usager WHERE id = ?";
-            // var_dump($sql);
-
-            // PREPARE LA REQUETE CAR GET donc on pose un flag (?)
-            $requete = $bdd->prepare($sql);
-
-            // EXECUTE LA REQUETTE CAR GET ou on passe la valeur du drapeau
-            $requete->execute(array($id));
-            // var_dump($requete);
-
-            // RECUPERATION DES INFOS AVEC FETCH (CAR QUE UN USAGER) 
-            $usager = $requete->fetch(PDO::FETCH_ASSOC);
-            // var_dump($usager);
-        }else {
-            // REDIRIGER VERS INDEX.PHP
-            header('location:index.php');
-        }
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
     }
 ?>
 
 
-
+<!-- requete bdd pour affichage -->
+<?php 
+    // VERIFIE SI ON A UN ID EN GET 
+    if (isset($_GET['id'])) {
+        // enregistre l'infos (intval passe a zero si c'est une string)
+        $id = intval($_GET['id']);
+        // si notre id est sup a zero on peut travailler avc
+        if ($id > 0) {
+            $sql = "SELECT * FROM usager WHERE id = ?";
+            $requete = $bdd->prepare($sql);
+            $requete->execute(array($id));
+            $usager = $requete->fetch(PDO::FETCH_ASSOC);
+        }else {
+            header('location:index.php');
+        }
+    }
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -58,6 +50,13 @@
 
 <!-- FORMULAIRE DE MODIFICATION -->
 <div class="container">
+    <!-- gestion alerte error -->
+<?php 
+    if(isset($_SESSION['error_update_client']) && $_SESSION['error_update_client']==false){
+        alert('danger','Une erreur est survenue veuillez recommencer');
+        unset($_SESSION['error_update_client']);
+    } 
+?>
     <form action="action.php" method="POST">
     <input type="hidden" name="id" value=" <?= $usager['id'] ?>">
         <div class="mb-3">

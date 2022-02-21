@@ -2,33 +2,32 @@
 <?php  include '../config/config.php'; ?>
 <!-- connexion a la bdd -->
 <?php include PATH_ADMIN.'bdd.php';?>
+<!-- function isConnect -->
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
+    }
+?>
 
+<!-- Requete bdd -->
 <?php 
-    // var_dump($_GET);
     // récupéré l'id transmis en get via l'url en
     if (isset($_GET['id'])) {
-        // var_dump($_GET);
         // enregistrer l'info dans une variable en intval 
         $id = intval($_GET['id']);
-        // var_dump($id);
         // autre couche de écurité si id > a 0
         // intval transform en 0 si c'est un string
         if ($id > 0) {
             // creer la requete sql pour
             $sql = "SELECT * FROM auteur WHERE id= ?";
-
             // utiliser la methode prepare (dnc drapeau)
             $requete = $bdd->prepare($sql);
-            // var_dump($requete);
-
             // execute avec un array contenant la valeur
             $requete->execute(array($id));
-            // var_dump($requete);
-            // $requete->errorInfo();
             // fetch pour récupérer les infos de la bdd      
             $auteur= $requete->fetch(PDO::FETCH_ASSOC);
-            // var_dump($auteur);
-        } // else (id < 0 ) donc on repart a l'index
+        }
         else {
             // rediriger vers index.php'
             header('location:index.php');
@@ -58,6 +57,15 @@
 
 <!-- FORMULAIRE D'AJOUT -->
 <div class="container">
+
+    <!-- gestion alert error -->
+    <?php 
+        // var_dump($_SESSION);
+        if (isset($_SESSION['error_update_auteur']) && $_SESSION['error_update_auteur']==false){
+            alert ('danger','Une erreur est survenue veuillez recommencer');
+        }
+    ?>
+    
     <form action="<?= URL_ADMIN?>/Auteurs/action.php" method="POST">
         <input type="hidden" name="id" value=" <?= $auteur['id']?>">
         <div class="mb-3">

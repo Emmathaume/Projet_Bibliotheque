@@ -1,0 +1,52 @@
+
+
+
+<!-- BIBLIOTHEQUE -->
+
+- faire les single (deja fait: client)
+-Verification des données utilisateurs lors des saisie formulaire add et update 
+<!-- - enregistrer les roles utilisateurs a la connexion -->
+
+<!-- CRUD livres -->
+- Livre :
+    <!-- - index.php : affiche la liste des livres 
+    (N°isbn, illustration, titre (lien pour single.php), résumé, prix, date d'achat (format fr), etat, btn modifier (lien pour update.php), btn supprimer(lien pour action.php))
+    - single.php : affiche la fiche d'informations sur un livre
+    (Illustration, titre, résumé, nb de pages, n°isbn, prix, date d'achat (format fr), etat, disponibilité (disponible||en location), auteur (lien vers single.php (de l'auteur)), les catégories, un bouton modifier (lien pour update.php))
+    - add.php : affiche le formulaire qui permet de récuperer les informations (avec les catégories et les auteurs)pour ajouter un livre en bdd
+    - update.php : affiche le formulaire qui permet de modifier les informations (y compris les catégories et les   auteurs)d'un livre en bdd
+    - action.php : contient la logique des fonctionalités du module (ajouter/modifier/supprimer)
+    - ajout d'un livre :
+        - recupérer et traiter les informations reçus du formulaire de manière sécuriser
+        - recuperation et traitement de l'illustration (deplacement dans admin/img/illustration) -->
+        <!-- - recuperation et traitement de la/des catégorie(s)
+        - recuperation et traitement de l'/des auteur(s)
+        - creer et executer la requete SQL qui permet l'ajout dans la table livre
+        - creer et executer la requete SQL qui permet l'ajout dans la table categorie_livre
+        - creer et executer la requete SQL qui permet l'ajout dans la table auteur_livre -->
+        <!-- - si ajout dans les tables ok, creer et executer la requete SQL qui permet les ajouts dans la table action
+        - si ajout dans action ok, rediriger vers index.php
+        - si erreur , rediriger vers add.php avec infos  -->
+        
+    - update d'un livre :
+        <!-- - recupérer et traiter les informations reçus du formulaire de manière sécuriser -->
+        <!-- - traitement de l'illustration -->
+        - traitement de la/des catégorie(s)
+        - traitement de l'/des auteur(s)
+        - creer et executer la requete SQL qui permet de modification dans la table livre
+        - creer et executer la requete SQL qui permet de modification dans la table categorie_livre
+        - creer et executer la requete SQL qui permet de modification dans la table auteur_livre
+        - si modification dans les tables ok, creer et executer la requete SQL qui permet les ajouts dans la table action
+        - si modification dans action ok, rediriger vers index.php
+        - si erreur , rediriger vers add.php avec infos
+    - supprimer un livre :
+        - recupérer et traiter l'information passé dans l'URL
+        - récuperation (en bdd) et traitement de l'illustration
+        - récuperation (en bdd) et traitement de la/des catégorie(s)
+        - récuperation (en bdd) et traitement de l'/des auteur(s)
+        - creer et executer la requete SQL qui permet de supprimer dans la table livre
+        - creer et executer la requete SQL qui permet de supprimer dans la table categorie_livre
+        - creer et executer la requete SQL qui permet de supprimer dans la table auteur_livre
+        - si modification dans les tables ok, creer et executer la requete SQL qui permet les ajouts dans la table action
+        - si modification dans action ok, rediriger vers index.php
+        - si erreur , rediriger vers add.php avec infos

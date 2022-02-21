@@ -1,7 +1,13 @@
 <!-- Liste tout les clients -->
 <?php include "../bdd.php";?>
 <?php include "../config/config.php";?>
-
+<!-- function isConnect -->
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
+    }
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -26,24 +32,39 @@
 
 <!-- RECUPERER TOUT LES USAGERS EN BDD -->
 <?php 
-
     // ENREGISTRER LA REQUETE SQL
     $sql = "SELECT * FROM usager ";
-    // var_dump($sql);
     // UTILISER LA METHODE QUERY POUR TRANSMMETTRE LA REQUETE A LA BDD LA REQUET
     $requete = $bdd->query($sql);
-    // var_dump($requete);
     // AFFICHER AVEC FETCHALL + SON PARAMETRE D'AFFICHAGE
     $usagers = $requete->fetchAll(PDO::FETCH_ASSOC);
-    // var_dump($usagers);
     // L'INCLURE DANS UN ELEMENT html POUR UN AFFICHAGE PROPRE
 ?>
 
 <div class="container">
+    <!-- GESTION DES BANDEAUX D'ALERTE -->
+<?php
+
+    if (isset($_SESSION['error_add_client']) && $_SESSION['error_add_client'] == true){
+        alert('success','Votre usager à bien été ajouter');
+        unset($_SESSION['error_add_client']);
+    }        
+    if (isset($_SESSION['error_update_client']) && $_SESSION['error_update_client'] == true) {
+        alert('success','Votre usager à bien été modifié');
+        unset($_SESSION['error_update_client']);
+    }
+    if (isset($_SESSION['error_delete_client']) && $_SESSION['error_delete_client'] == false) {
+        alert('danger',"Votre client n'as pas été supprimer");
+        unset($_SESSION['error_delete_client']);
+    }
+    if (isset($_SESSION['error_delete_client']) && $_SESSION['error_delete_client'] == true) {
+        alert('success',"Votre client a bien été supprimer");
+        unset($_SESSION['error_delete_client']);
+    }
+?>
     <table class="table">
     <thead>
         <tr>
-        <!-- <th scope="col">ID </th> -->
         <th scope="col">Nom </th>
         <th scope="col">Prénom</th>
         <th scope="col">Adresse </th>
@@ -58,7 +79,6 @@
     <tbody> 
         <!-- BOUCLE AFFICHAGE INFOS BDD -->
         <?php foreach($usagers as $usager) : ?>
-          <!-- <?php var_dump($usager) ?> -->
         <tr> 
             <td scope="row"><?= $usager['nom']?></td>
             <td><?= $usager['prenom']?></td>

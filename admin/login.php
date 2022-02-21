@@ -1,5 +1,11 @@
-<?php session_start(); ?>
 <?php include 'config/config.php'; ?>
+<!-- function isConnect -->
+<?php
+    if (isConnect()) {
+        header('location:index.php');
+        die;
+    }
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -21,23 +27,21 @@
     <div class="content-container">
         <div class="wrap-container">
 
-            <form action="<?= URL_ADMIN?>js/login.php" method="POST" onsubmit="return validateForm()">
+            <form action="action.php" method="POST">
                 <div class="login-form-title mb-30">
                     Connexion
                 </div>
-                <div class="wrap-input validate-input mb-20" data-validate="Enter un nom d'utilisateur" >
-                    <input class="input-login " name="name_user" type="text" placeholder="Nom d'utilisateur">
-                    <span class="user_error"></span>
+                <div class="wrap-input validate-input mb-20" >
+                    <input class="input-login " name="mail" type="text" placeholder="Adresse mail">
                 </div>
                 
-                <div class="wrap-input validate-input" data-validate="Entrez un mot de passe ">
+                <div class="wrap-input validate-input">
                     <input class="input-login"  name="password" type="password" placeholder="Votre mot de passe">
-                    <span class="password_error"></span>
                 </div>
                 <span class="forget-password mb-30"><a href="">Mot de passe oublié</a></span>
                 
                 <div class="submit-login-container">
-                    <input class="submit-login" type="submit" name="login_form" value="Se connecter">
+                    <input class="submit-login" type="submit" name="btn_connect" value="Se connecter">
                 </div>
             </form>
             <div class="sign-in">

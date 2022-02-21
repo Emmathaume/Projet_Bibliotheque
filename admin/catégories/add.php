@@ -3,6 +3,14 @@
 <!-- connexion a la bdd -->
 <?php include PATH_ADMIN.'bdd.php';?>
 
+<!-- fonction isConnect -->
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -24,11 +32,17 @@
 
 <!-- FORMULAIRE D'AJOUT -->
 <div class="container">
+
+    
+<!--ALERTE AJOUT ECHOUE -->
+<?php
+    if (isset($_SESSION["error_categories"]) && $_SESSION['error_categories'] == false) {
+        alert ('danger',"L'ajout de votre catégorie à échoué");
+        unset($_SESSION['error_categories']);
+    }
+?>
+
     <form action="<?= URL_ADMIN?>/catégories/action.php" method="POST">
-        <!-- <div class="mb-3">
-            <label for="id" class="form-label">Id : </label>
-            <input type="text" name="id" class="form-control">
-        </div> -->
         <div class="mb-3">
             <label for="libelle" class="form-label">Libellé :</label>
             <input type="text" name="libelle" class="form-control">

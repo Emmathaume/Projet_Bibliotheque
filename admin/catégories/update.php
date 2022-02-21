@@ -3,30 +3,30 @@
 <!-- connexion a la bdd -->
 <?php include PATH_ADMIN.'bdd.php';?>
 
+<!-- fonction isConnect -->
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
+    }
+?>
+
+<!-- requete affichage single pour modif -->
 <?php 
     // VERIFIE SI ON A UN ID EN GET 
     if (isset($_GET['id'])) {
-    //    var_dump($_GET['id']);
         // enregistre l'infos (intval passe a zero si c'est une string)
         $id = intval($_GET['id']);
         // si notre id est sup a zero on peut travailler avc
         if ($id > 0) {
             // REQUETE SQL POUR RECUPERER L'USAGER EN BDD
             $sql = "SELECT * FROM categorie WHERE id = ?";
-            // var_dump($sql);
-
             // PREPARE LA REQUETE CAR GET donc on pose un flag (?)
             $requete = $bdd->prepare($sql);
-
             // EXECUTE LA REQUETTE CAR GET ou on passe la valeur du drapeau
             $requete->execute(array($id));
-            // var_dump($requete);
-
             // RECUPERATION DES INFOS AVEC FETCH (CAR QUE UN USAGER) 
             $categorie = $requete->fetch(PDO::FETCH_ASSOC);
-            // var_dump($categorie);
-            //    die;
-
         }else {
             // REDIRIGER VERS INDEX.PHP
             header('location:index.php');
@@ -55,10 +55,16 @@
 
 <!-- FORMULAIRE D'AJOUT -->
 <div class="container">
+    <!-- ALERTE ERREUR UPDATE -->
+<?php 
+    if(isset($_SESSION['error_update_categorie']) && $_SESSION['error_update_categorie'] == false){
+        alert ('danger','Une erreur est survenue veuillez recommencer');
+        unset($_SESSION['error_update_categorie']);
+    }
+?>
+
     <form action="<?= URL_ADMIN?>/catégories/action.php" method="POST">
-
         <input type="hidden" name="id" class="form-control" value="<?= $categorie['id'] ?>">
-
         <div class="mb-3">
             <label for="libelle" class="form-label">Libellé :</label>
             <input type="text" name="libelle" class="form-control" value="<?= $categorie['libelle'] ?>">

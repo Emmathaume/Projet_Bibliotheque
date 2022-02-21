@@ -1,54 +1,75 @@
-<?php session_start();?>
+<?php include 'config/config.php'; ?>
+<?php include 'bdd.php'; ?>
 
 
 
 <!-- VERIFICATION SESSION MDP -->
 <?php 
-    // session_destroy();
-    // si mon tableau info log existe
-    if (isset ($_SESSION['info-log'])) {
-        // boucle sur le tableau avec un foreach pour verifier les value
-        foreach ($_SESSION['info-log'] as $key => $value) {
-            //  key = nom du champs et value = saisie utilisateur
-
-            // Creer une variable qui permet de vérifier si les value sont valide
-            $check = false;
-            // s'assurer que le bouton ne soit pas pris en compte
-            if ($key != 'login-form') {
-                // on switch sur la key user et password pour verifier leur value
-                switch ($key) {
-                    case 'name_user':
-                        if ($value == 'admin') {
-                            $check = true;
-                        }
-                        break;
-                    case 'password':
-                        if ($value == 'DWWM22') {
-                            $check = true;
-                        }
-                        break;
-                }
-                // on remplis les tableau correspondant ingo-log ou error
-                if ($check) {
-                    $_SESSION["ok-log"] += [$key => $value];
-                }
-                else {
-                    $_SESSION['error-log'][] = $key;
-                }
-                // on redirige vers la page correspondante
-                if (isset($_SESSION['error-log'])) {
-                    header ('location:login.php');
-                }
-                if (count($_SESSION['ok-log']) === 2 ) {
-                    header ("location:index.php");
-                }
-            }
+    // verifier qu'on recoit le btn_connect
+    if (isset($_POST['btn_connect'])) {
+        // var_dump($_POST);
+        // TTMNT des données user
+        
+        // securisation des info recu
+        $mail= htmlentities($_POST['mail']);
+        $password= htmlentities($_POST['password']);
+        // chekc de user mail en bdd 
+        // requete sql
+        $sql = "SELECT * FROM utilisateur WHERE mail = ?";
+        
+        // prepare + execute
+        $req = $bdd->prepare($sql);
+        $req->execute([$mail]);
+        // fetch pour afficher
+        $utilisateur = $req->fetch(PDO::FETCH_ASSOC);
+        // var_dump($utilisateur);
+        
+        // si le fetch nous renvoie false alors on est pas connecter
+        if (!$utilisateur) {
+            // le mail ou pseudo nexiste pas
+            // creer un $_session qui enregistre l'erreur
+            $_SESSION['connect'] = false;
+            header ('location:login.php');
+            die;
         }
+        // on verifie le mot de passe avc password verify
+        // s'il n'existe pas on se connecte pas
+        if (!password_verify($password, $utilisateur["mot_de_passe"])) {
+            // creer un $_session qui enregistre l'erreur
+            $_SESSION['connect'] = false;
+            header ('location:login.php');
+            die;
+        }
+        // si tout ok on supprime mdp de la session avc unset
+        unset($utilisateur['mot_de_passe']);
+        // on enregistre les info dont on a besoin dans un tableau
+            // les info de l'utilisateur
+        $_SESSION['user'] = $utilisateur;
+            // L'heure de connexion
+        $_SESSION['date_connect'] = new DateTime;
+        var_dump($_SESSION['user']['id']);
+        // die;
+        
+        checkRoles($_SESSION['user']['id'],$bdd);
+        // die;
+            // s'il est connecté
+        $_SESSION['connect'] = true;
+        // et on redirige vers index de admin
+        header('location:index.php');
+
+        //*********** check role ????
+        die;
     }
-// var_dump($_SESSION["ok-log"]);
-// var_dump($_SESSION["error-log"]);
 ?>
 
+<!-- LOG OUT -->
+<?php 
+    if (isset($_GET['connect']) && $_GET['connect']== 'false') {
+        $_SESSION = [];
+        header('location:../index.php');
+        die;
+    }
+?>
 
 
 

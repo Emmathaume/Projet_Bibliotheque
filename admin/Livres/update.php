@@ -2,42 +2,65 @@
 <!-- Ajouter un livre -->
 <!-- connexion a la bdd -->
 <?php include '../bdd.php';?>
-
-<!-- Permet de recuperer les infos bdd pour les afficher -->
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
+    }
+?>
+<!-- Permet de recuperer les infos du livre pour les afficher -->
 <?php 
-// var_dump($_GET);
     // récupéré l'id transmis en get via l'url en
     if (isset($_GET['id'])) {
-        // var_dump($_GET);
         // enregistrer l'info dans une variable en intval 
         $id = intval($_GET['id']);
-        // var_dump($id);
         // autre couche de écurité si id > a 0
         // intval transform en 0 si c'est un string
         if ($id > 0) {
             // creer la requete sql pour
             $sql = "SELECT * FROM livre WHERE id= ?";
-
             // utiliser la methode prepare (dnc drapeau)
             $requete = $bdd->prepare($sql);
-            // var_dump($requete);
-
             // execute avec un array contenant la valeur
             $requete->execute(array($id));
-            // var_dump($requete);
-            // $requete->errorInfo();
             // fetch pour récupérer les infos de la bdd      
             $livres= $requete->fetch(PDO::FETCH_ASSOC);
-            // var_dump($livres);
-        } // else (id < 0 ) donc on repart a l'index
+        }
         else {
             // rediriger vers index.php'
             header('location:index.php');
-        }
-        
+        }  
     }
 ?>
+<!-- recuperer auteur en bdd -->
+<?php 
+    // requete sql
+    $sql = 'SELECT nom_de_plume,id FROM auteur';
+    // prepare
+    $req = $bdd->query($sql);
+    // fetchAll
+    $name_auteur = $req->fetchAll(PDO::FETCH_ASSOC);
+?>
 
+<!-- recuperer catégorie en bdd -->
+<?php 
+    // requete sql
+    $sql = 'SELECT * FROM categorie';
+    // query
+    $req = $bdd->query($sql);
+    // fetchAll
+    $name_categorie = $req->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!-- recuperer Etat en bdd -->
+<?php
+    // requete sql
+    $sql= 'SELECT * FROM etat';
+    // query
+    $req = $bdd->query($sql);
+    // fetchAll
+    $etats = $req->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -50,6 +73,9 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles for this template-->
     <link href="<?= URL_ADMIN?>css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- SELECT 2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <title>Modifier un Livre</title>
 </head>
 <body>
@@ -60,37 +86,79 @@
 
 <!-- FORMULAIRE D'AJOUT -->
 <div class="container">
-    <form action="<?= URL_ADMIN?>Livres/action.php" method="POST">
+<!-- gestion alerte error -->
+<?php 
+    if (isset($_SESSION['error_update_book']) && $_SESSION['error_update_book'] = false) {
+        alert('danger', "Votre modification n'as pas été prise en compte, veuillez recommencer");
+        unset($_SESSION['error_update_book']);
+    }
+?>
+
+    <form class='row' action="<?= URL_ADMIN?>Livres/action.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<?= $livres['id']?>">
-        <div class="mb-3">
+        <div class="col-4 mb-3">
             <label for="num_isbn" class="form-label">Numéro ISBN : </label>
             <input type="text" name="num_ISBN" class="form-control" value="<?= $livres['num_ISBN'] ?>">
         </div>
-        <div class="mb-3">
+        <div class="col-4 mb-3">
             <label for="titre" class="form-label">Titre :</label>
             <input type="text" name="titre" class="form-control" value="<?= $livres['titre'] ?>">
         </div>
-        <div class="mb-3">
+        <div class="col-4 mb-3">
             <label for="illustration" class="form-label">Illustration :</label>
             <input type="file" name="illustration" class="form-control">
         </div>
-        <div class="mb-3">
-            <label for="resume" class="form-label">Résumé :</label>
-            <input type="text" name="resume" class="form-control" value="<?= $livres['resume'] ?>">
-        </div>
-        <div class="mb-3">
+
+        <div class="col-4 mb-3">
             <label for="prix" class="form-label">Prix location :</label>
             <input type="text" name="prix" class="form-control" value="<?= $livres['prix'] ?>">
         </div>    
-        <div class="mb-3">
+        <div class="col-4 mb-3">
             <label for="nbre_page" class="form-label">Nombre de pages :</label>
             <input type="text" name="nb_pages" class="form-control" value="<?= $livres['nb_pages'] ?>">
         </div>        
-        <div class="mb-3">
+        <div class="col-4 mb-3">
             <label for="date" class="form-label">Date d'achat :</label>
             <input type="text" name="date" class="form-control" value="<?= $livres['date_achat'] ?>">
         </div>
-            <div class="text-center mb-3">
+        <div class="col-4 mb-3">
+            <label for="auteur" class="form-label">Auteur : </label>
+            <select class="js-example-basic-multiple form-control" name="auteur[]" multiple="multiple" style="width: 100%">
+                <!-- Option select 2 -->
+                <?php 
+                    for ($i=0; $i < count($name_auteur) ; $i++) : ?>
+                        <option value="<?= $name_auteur[$i]['id']  ?>"><?= $name_auteur[$i]['nom_de_plume'] ?></option>
+                    <?php endfor;?>
+                ?>
+            </select>
+        </div>
+        <div class="col-4 mb-3">
+            <label for="categorie" class="form-label">Catégorie : </label>
+            <select class="js-example-basic-multiple form-control" name="categorie[]" multiple="multiple" style="width: 100%">
+                <!-- Option select 2 -->
+                <?php 
+                for ($i=0; $i < count($name_categorie) ; $i++) : ?>
+                    <option value="<?= $name_categorie[$i]['id']  ?>"><?= $name_categorie[$i]['libelle'] ?></option>
+                <?php endfor;?>
+                ?>
+            </select>
+        </div>
+        <div class="col-4 mb-3">
+            <label for="etat" class="form-label">Etat : </label>
+            <select class="js-example-basic-multiple form-control" name="etat[]" multiple="multiple" style="width: 100%">
+                <!-- Option select 2 -->
+                <?php 
+                    foreach ($etats as $etat) : ?>
+                        <option value="<?= $etat['id']  ?>"><?= $etat['libelle'] ?></option>
+                    <?php endforeach;?>
+                ?>
+            </select>
+        </div>
+        <div class="col-12 mb-3">
+            <label for="resume" class="form-label">Résumé :</label>
+            <input type="text" name="resume" class="form-control" value="<?= $livres['resume'] ?>">
+        </div>
+            <div class="col-12 text-center mb-3">
             <input type="submit" name="btn_update_book" class="btn btn-primary" value="Ajouter">
         </div>
     </form>
@@ -98,3 +166,7 @@
 
 
 <?php include PATH_ADMIN . 'includes/footer.php';?>
+<script src="https://cdn.ckeditor.com/4.17.2/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('resume');
+</script>

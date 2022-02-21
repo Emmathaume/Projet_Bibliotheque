@@ -1,18 +1,22 @@
 <?php include '../config/config.php'; ?>
 <!-- AFFICHER UN SEUL CONTACT -->
 <?php include PATH_ADMIN.'bdd.php';?>
-
+<!-- function isConnect -->
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
+    }
+?>
+<!-- requete affichage bdd -->
 <?php 
-// var_dump($_GET);
-// recevoir l'id de l'occurence selectionner
-// faire une verification qu'il existe pour executer le code 
+    // recevoir l'id de l'occurence selectionner
+    // faire une verification qu'il existe pour executer le code 
     if (isset($_GET['id'])){
         // s'il existe enregistrer + intval pour securit
         $id = intval($_GET['id']);
-        // var_dump($_GET['id']);
         // creer la requete sql 
         $sql = "SELECT * FROM usager WHERE id = :id";
-        // var_dump($sql);
         // prepare de la requette 
         $requete = $bdd->prepare($sql);
         // execute
@@ -20,7 +24,6 @@
         //  ?FETCH ? 
         // Recupere les infos bdd
         $contact = $requete->fetch(PDO::FETCH_ASSOC);
-        // var_dump($contact);
     }
 ?>
 
@@ -70,7 +73,7 @@
 
 <div class="container mt-5">
     <table class="table">
-    <thead>
+    <thead class="thead-dark">
         <tr>
         <th class="text-center" colspan="4">Information locations</th>
         </tr>

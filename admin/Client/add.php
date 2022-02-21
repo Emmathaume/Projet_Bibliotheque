@@ -2,7 +2,13 @@
 <?php  include '../config/config.php'; ?>
 <!-- connexion a la bdd -->
 <?php include PATH_ADMIN.'bdd.php';?>
-
+<!-- function isConnect -->
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
+    }
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -24,6 +30,12 @@
 
 <!-- FORMULAIRE D'AJOUT -->
 <div class="container">
+    <!-- gestion alert error -->
+<?php
+    if (isset($_SESSION['error_add_client']) && $_SESSION['error_add_client']==false){
+        alert('danger','Une erreur est survenue veuillez recommencer');
+    }
+?>
     <form action="<?= URL_ADMIN?>Client/action.php" method="POST">
         <div class="mb-3">
             <label for="nonm" class="form-label">Nom : </label>

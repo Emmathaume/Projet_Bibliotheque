@@ -45,11 +45,18 @@
             </li>
             <!-- Nav Item 3 -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
+                <a class="nav-link collapsed" href="<?= URL_ADMIN?>location/index.php" data-toggle="collapse" data-target="#location"
+                    aria-expanded="true" aria-controls="location">
                     <i class="fas fa-bookmark"></i>
-                    <span>Locations en cours</span>
+                    <span>Locations</span>
                 </a>
+                <div id="location" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="<?= URL_ADMIN?>location/index.php">Voir tout</a>
+                        <a class="collapse-item" href="<?= URL_ADMIN?>location/add.php">Créer</a>
+                        <a class="collapse-item" href="">Voir locations en cours</a>
+                    </div>
+                </div>
             </li>
 
             <!-- Divider -->
@@ -103,16 +110,53 @@
                     </div>
                 </div>
             </li>
-
-
-
+            <!-- Nav Item Editeurs-->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#editeur"
+                    aria-expanded="true" aria-controls="editeur">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Éditeurs</span>
+                </a>
+                <div id="editeur" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="<?= URL_ADMIN?>editeur/index.php">Voir tout</a>
+                        <a class="collapse-item" href="<?= URL_ADMIN?>editeur/add.php">Ajouter</a>
+                        <a class="collapse-item" href="">Voir locations en cours</a>
+                    </div>
+                </div>
+            </li>
             <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+            <hr class="sidebar-divider">
 
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
 
+<!-- RESERVE AU ADMIN -->
+<?php 
+    if (isAdmin($bdd)) :?>
+        <!-- Heading -->
+        <div class="sidebar-heading">Utilisateurs</div>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<?= URL_ADMIN?>utilisateurs/index.php">
+                <i class="fas fa-users"></i>
+                <span>Tous les utilisateurs</span>
+            </a>
+        </li>            
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<?= URL_ADMIN?>utilisateurs/add.php">
+                <i class="fas fa-user"></i>
+                <span>Ajouter un utilisateur</span>
+            </a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    <?php endif; ?>
         </ul>
         <!-- End of Sidebar -->
+
+

@@ -14,14 +14,13 @@
      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
      <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;700&display=swap" rel="stylesheet">
      <!-- Fichier CSS -->
-     <link rel="stylesheet" href="indexcss.css">
+     <!-- <link rel="stylesheet" href="indexcss.css"> -->
      <link rel="stylesheet" href="Contact.css">
      <title>Bibliothèque Parici - Parlabas</title>
-    </head>
+</head>
 
     <!-- header generer en php -->
-   <?php 
-    include "includes/header.php"; ?>
+<?php include "includes/header.php"; ?>
 
     <div class="container-form d-flex justify-content-center mt-5">
         <form action="" method="">
@@ -40,7 +39,5 @@
         </form>
     </div>
 
-    <!-- footer generé en php -->
-    <?php
-    include "includes/footer.php";
-    ?>
+<!-- footer generé en php -->
+<?php include "includes/footer.php"; ?>

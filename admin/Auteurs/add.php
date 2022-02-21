@@ -2,6 +2,13 @@
 <?php  include '../config/config.php'; ?>
 <!-- connexion a la bdd -->
 <?php include PATH_ADMIN.'bdd.php';?>
+<!-- function isConnect -->
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
+    }
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -24,7 +31,14 @@
 
 <!-- FORMULAIRE D'AJOUT -->
 <div class="container">
-    <form action="<?= URL_ADMIN?>/Auteurs/action.php" method="POST">
+    <!-- gestion alerte error -->
+    <?php 
+        if (isset($_SESSION['error_add_auteur']) && $_SESSION['error_add_auteur']==false) {
+            alert('danger',"Une erreur est survenue veuillez recommencer");
+            unset($_SESSION['error_add_auteur']);
+        }
+    ?>
+    <form action="<?= URL_ADMIN?>/Auteurs/action.php" method="POST" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="nonm" class="form-label">Nom : </label>
             <input type="text" name="nom" class="form-control">

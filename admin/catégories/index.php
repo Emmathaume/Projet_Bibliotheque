@@ -1,6 +1,13 @@
 <!-- Liste tout les clients -->
-<?php include "../bdd.php";?>
 <?php include "../config/config.php";?>
+<?php include "../bdd.php";?>
+<!-- function isConnect -->
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
+    }
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -24,26 +31,44 @@
 <?php include PATH_ADMIN . 'includes/topbar.php';?>
 
 
-<!-- RECUPERER TOUT LES CATEGORIES EN BDD -->
+<!-- RECUPERER LES CATEGORIES EN BDD -->
 <?php 
-
     // ENREGISTRER LA REQUETE SQL
     $sql = "SELECT * FROM categorie ";
-    // var_dump($sql);
     // UTILISER LA METHODE QUERY POUR TRANSMMETTRE LA REQUETE A LA BDD LA REQUET
     $requete = $bdd->query($sql);
-    // var_dump($requete);
     // AFFICHER AVEC FETCHALL + SON PARAMETRE D'AFFICHAGE
     $categories = $requete->fetchAll(PDO::FETCH_ASSOC);
-    // var_dump($categories);
     // L'INCLURE DANS UN ELEMENT html POUR UN AFFICHAGE PROPRE
 ?>
 
 <div class="container">
+    <!-- gestion alerte error -->
+<?php 
+    // ALERTE AJOUT OK 
+    if (isset($_SESSION["error_categories"]) && $_SESSION['error_categories'] == true) {
+        alert ('success',"Vous avez bien ajouté une catégorie");
+        unset($_SESSION['error_categories']);
+    }
+    // ALERTE UPDATE
+    if(isset($_SESSION['error_update_categorie']) && $_SESSION['error_update_categorie'] == true){
+        alert ('success','Vous avez bien modifié une catégorie');
+        unset($_SESSION['error_update_categorie']);
+    }
+    // ALERTE DELETE 
+    if(isset($_SESSION['error_delete_categories']) && $_SESSION['error_delete_categories'] == true){
+        alert ('success','Vous avez bien supprimé une catégorie');
+        unset($_SESSION['error_delete_categories']);
+    }
+
+    if(isset($_SESSION['error_delete_categories']) && $_SESSION['error_delete_categories'] == false){
+        alert ('danger','Votre utilisateur n\'as pas été supprimé');
+        unset($_SESSION['error_delete_categories']);
+    }
+?>
     <table class="table-responsive">
     <thead>
         <tr>
-        <!-- <th scope="col">ID </th> -->
         <th scope="col">ID </th>
         <th scope="col">Libellé</th>
 
@@ -55,11 +80,9 @@
     <tbody> 
         <!-- BOUCLE AFFICHAGE INFOS BDD -->
         <?php foreach($categories as $categorie) : ?>
-          <!-- <?php var_dump($categorie) ?> -->
         <tr> 
             <td scope="row"><?= $categorie['id']?></td>
             <td><?= $categorie['libelle']?></td>
-
             <td><a href="<?= URL_ADMIN ?>catégories/single.php?id=<?= $categorie['id']?>" class="btn btn-success">Voir</a></td>
             <td><a href="<?= URL_ADMIN ?>catégories/update.php?id=<?= $categorie['id']?>" class="btn btn-warning">Modifier</a></td>
             <td><a href="<?= URL_ADMIN ?>catégories/action.php?id=<?= $categorie['id']?>" class="btn btn-danger">Supprimer</a></td>

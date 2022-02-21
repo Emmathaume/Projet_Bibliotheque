@@ -1,13 +1,29 @@
 <?php include '../config/config.php'; ?>
 <?php include '../bdd.php'; ?>
-
+<!-- function isConnect -->
+<?php  
+    if (!isConnect()) {
+        header('location:../login.php');
+        die;
+    }
+?>
 
 
 <!--  AJOUTER UN AUTEUR -->
 <?php
     // si on reçoit le bouton add Auteurs
     if (isset($_POST['btn_add_auteur'])) {
-        var_dump($_POST);
+        // var_dump($_POST);
+        // die;
+            // AJOUTER UNE PHOTO AUTEUR
+        $tmp_name = $_FILES['photo']['tmp_name'];
+        $dir = PATH_ADMIN . 'img/photo_auteur';
+        $name= $_FILES["photo"]["name"];
+        if(!move_uploaded_file($tmp_name,"$dir/$name")) {
+            $_SESSION['error_add_auteur'] = false;
+            header('location:index.php');
+            die; 
+        }
 
         // Enregistrer les donnes + html entities ou inval 
         $nom = htmlentities($_POST['nom']);
@@ -18,7 +34,6 @@
         $code_postal = htmlentities($_POST['code_postal']);
         $mail = htmlentities($_POST['mail']);
         $numero = htmlentities($_POST['numero']);
-        $photo = htmlentities($_POST['photo']);
 
         // creer la requete SQL 
         $sql = "INSERT INTO auteur VALUES (NULL, :nom, :prenom, :nom_de_plume, :adresse, :ville, :code_postal, :mail, :numero, :photo)";
@@ -35,9 +50,8 @@
             ':code_postal'=>$code_postal,
             ':mail'=>$mail,
             ':numero'=>$numero,
-            ':photo'=>$photo,
+            ':photo'=>$name,
         );
-        var_dump($data);
         // execute de la requete avec redirection
         if (!$requete->execute($data)) {
             // rediriger vers add.php
@@ -56,7 +70,6 @@
 <?php 
     // verifier si on a un btn_update auteur
     if (isset($_POST['btn_update_auteur'])) {
-        var_dump($_POST);
         // enregistrer les info recu en post
         $id = intval($_POST['id']);
         $nom = htmlentities($_POST['nom']);
@@ -92,48 +105,69 @@
         // execute la requete avec le data
         if (!$requete->execute($data)) {
             // on renvoi a la page modif +id en get
+            $_SESSION['error_update_auteur']= false;
             header("location:update.php?=id=$id");
             die;
         }else {
             // on renvoie vers l'index.php
+            $_SESSION['error_update_auteur']= true;
             header('location:index.php');
             die;
         }
         
     }
-
-
-
-
-
-
 ?>
 
 <!-- SUPPRIMER UN AUTEUR  -->
 <?php 
 
     if (isset($_GET['id'])) {
-        var_dump($_GET);
         
         // enregistrer l'id en intval
         $id= intval($_GET['id']);
-        var_dump($id);
-        // creer la requete sql 
-        $sql = 'DELETE FROM auteur WHERE id= ? LIMIT 1';
-        var_dump($sql);
-        // prepare la requete sql
-        $requete = $bdd->prepare($sql);
-        var_dump($requete);
-        // die;
-        // execute + redirection
-        if (!$requete->execute(array($id))) {
-            // on repars vers index. php
-            header('location:index.php');
-            die;
-        }else {
-            // on repars vers index
-            header('location:index.php');
+        if ($id <= 0 ) {
+            // erreur
+            header('Location:index.php');
             die;
         }
+        // ** GESTION DE L'IPHOTO
+            // 1) recuperer le nom de photo utilisateur avec requete sql
+            // 2) vérifier si il existe dans le dossier
+            // 3) le supprimer
+            $sql = 'SELECT photo FROM auteur WHERE id = ?';
+            $req = $bdd->prepare($sql);
+            $req->execute([$id]);
+            $hold_photo = $req->fetch(PDO::FETCH_ASSOC);
+                // permet d'enregistrer uniquement le nom de l'image
+            $hold_photo= $hold_photo['photo'];
+            $dir_photo_auteur = PATH_ADMIN . 'img/photo_auteur/' . $hold_photo;
+
+            if (!is_file($dir_photo_auteur)) {
+                // erreur la photo n'existe pas ou plus dans le dossier
+                $_SESSION['error_delete_auteur'] = false;
+                header('location:index.php');
+                die;
+            }
+            if (!unlink($dir_photo_auteur)) {
+                // erreur on peut pas supprimer la photo
+                $_SESSION['error_delete_auteur'] = false;
+                header('location:index.php');
+                die;
+            }
+            // SUPPRESSION DE L'UTILISATEUR EN BDD
+                // creer la requete sql 
+                $sql = 'DELETE FROM auteur WHERE id= ? LIMIT 1';
+                // prepare la requete sql
+                $requete = $bdd->prepare($sql);
+                // execute + redirection
+                if (!$requete->execute(array($id))) {
+                    $_SESSION['error_delete_auteur'] = false;
+                    header('location:index.php');
+                    die;
+                }else {
+                    $_SESSION['error_delete_auteur'] = true;
+                    header('location:index.php');
+                    die;
+                }
     }
 ?>
