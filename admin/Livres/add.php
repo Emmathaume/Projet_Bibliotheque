@@ -63,8 +63,7 @@
 <div class="container">
     <!-- gestion alerte error -->
     <?php
-        if (isset($_SESSION['error_add_book']) && $_SESSION['error_
-        _book']==false){
+        if (isset($_SESSION['error_add_book']) && $_SESSION['error_add_book']==false){
             alert ('danger',"Votre livre n'as pas correctement été ajouter veuillez recommencer");
             unset($_SESSION['error_add_book']);
         }

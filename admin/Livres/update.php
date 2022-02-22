@@ -25,6 +25,55 @@
             $requete->execute(array($id));
             // fetch pour récupérer les infos de la bdd      
             $livres= $requete->fetch(PDO::FETCH_ASSOC);
+            // var_dump($livres);
+            // die;
+            // <!-- préselection categorie -->
+            // <?php 
+                $sql_cat = 'SELECT livre.id AS id_livre,categorie.id AS id_categorie, categorie.libelle
+                FROM categorie_livre 
+                INNER JOIN livre 
+                ON livre.id = categorie_livre.id_livre
+                INNER JOIN categorie
+                ON categorie.id = categorie_livre.id_categorie
+                WHERE livre.id = ?';
+
+                $req_cat= $bdd->prepare($sql_cat);
+                $req_cat->execute([$id]);
+                $cat_livre = $req_cat->fetchAll(PDO::FETCH_NUM);
+                $cat_livre = array_merge([],...$cat_livre);
+            
+
+                // <!-- preselection auteur -->
+                $sql_auteur = 'SELECT auteur.id as id_auteur, livre.id AS id_livre, auteur.nom_de_plume
+                FROM auteur_livre
+                INNER JOIN auteur 
+                ON auteur.id = auteur_livre.id_auteur
+                INNER JOIN livre
+                ON livre.id = auteur_livre.id_livre
+                WHERE livre.id = ?';
+
+                $req_auteur = $bdd->prepare($sql_auteur);
+                $req_auteur->execute([$id]);
+                $auteur_livre = $req_auteur->fetchAll(PDO::FETCH_NUM);
+                $auteur_livre = array_merge([],...$auteur_livre);
+
+
+                // <!-- préselection etat -->
+                $sql_etat = 'SELECT etat.id as id_etat, livre.id AS id_livre, etat.libelle
+                FROM etat_livre
+                INNER JOIN etat 
+                ON etat.id = etat_livre.id_etat
+                INNER JOIN livre
+                ON livre.id = etat_livre.id_livre
+                WHERE livre.id = ?';
+
+                $req_etat= $bdd->prepare($sql_etat);
+                $req_etat->execute([$id]);
+                $etat_livre = $req_etat->fetchAll(PDO::FETCH_ASSOC);
+                $etat_livre = $etat_livre[0];
+                // var_dump($etat_livre);
+
+
         }
         else {
             // rediriger vers index.php'
@@ -32,35 +81,39 @@
         }  
     }
 ?>
-<!-- recuperer auteur en bdd -->
-<?php 
-    // requete sql
-    $sql = 'SELECT nom_de_plume,id FROM auteur';
-    // prepare
-    $req = $bdd->query($sql);
-    // fetchAll
-    $name_auteur = $req->fetchAll(PDO::FETCH_ASSOC);
-?>
 
-<!-- recuperer catégorie en bdd -->
-<?php 
-    // requete sql
-    $sql = 'SELECT * FROM categorie';
-    // query
-    $req = $bdd->query($sql);
-    // fetchAll
-    $name_categorie = $req->fetchAll(PDO::FETCH_ASSOC);
-?>
+<!-- *********AFFICHAGE SELECT 2  *******-->
+    <!-- recuperer auteur en bdd -->
+    <?php 
+        // requete sql
+        $sql = 'SELECT nom_de_plume,id FROM auteur';
+        // prepare
+        $req = $bdd->query($sql);
+        // fetchAll
+        $name_auteurs = $req->fetchAll(PDO::FETCH_ASSOC);
+    ?>
+    <!-- recuperer catégorie en bdd -->
+    <?php 
+        // requete sql
+        $sql = 'SELECT * FROM categorie';
+        // query
+        $req = $bdd->query($sql);
+        // fetchAll
+        $name_categorie = $req->fetchAll(PDO::FETCH_ASSOC);
+    ?>
+    <!-- recuperer Etat en bdd -->
+    <?php
+        // requete sql
+        $sql= 'SELECT * FROM etat';
+        // query
+        $req = $bdd->query($sql);
+        // fetchAll
+        $etats = $req->fetchAll(PDO::FETCH_ASSOC);
+    ?>
+<!-- ******************************** -->
 
-<!-- recuperer Etat en bdd -->
-<?php
-    // requete sql
-    $sql= 'SELECT * FROM etat';
-    // query
-    $req = $bdd->query($sql);
-    // fetchAll
-    $etats = $req->fetchAll(PDO::FETCH_ASSOC);
-?>
+
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -79,11 +132,8 @@
     <title>Modifier un Livre</title>
 </head>
 <body>
-
     <?php include PATH_ADMIN.'includes/sidebar.php';?>
-
     <?php include PATH_ADMIN.'includes/topbar.php';?>
-
 <!-- FORMULAIRE D'AJOUT -->
 <div class="container">
 <!-- gestion alerte error -->
@@ -93,7 +143,6 @@
         unset($_SESSION['error_update_book']);
     }
 ?>
-
     <form class='row' action="<?= URL_ADMIN?>Livres/action.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<?= $livres['id']?>">
         <div class="col-4 mb-3">
@@ -126,9 +175,16 @@
             <select class="js-example-basic-multiple form-control" name="auteur[]" multiple="multiple" style="width: 100%">
                 <!-- Option select 2 -->
                 <?php 
-                    for ($i=0; $i < count($name_auteur) ; $i++) : ?>
-                        <option value="<?= $name_auteur[$i]['id']  ?>"><?= $name_auteur[$i]['nom_de_plume'] ?></option>
-                    <?php endfor;?>
+                    foreach ($name_auteurs as $name_auteur) : ?>
+                    <?php
+                        if (in_array($name_auteur['nom_de_plume'], $auteur_livre)) {
+                            $selected = ' selected';
+                        }else {
+                            $selected = '';
+                        }
+                    ?>
+                        <option value="<?= $name_auteur['id']?>" <?=$selected ?>><?= $name_auteur['nom_de_plume'] ?></option>
+                    <?php endforeach;?>
                 ?>
             </select>
         </div>
@@ -137,19 +193,34 @@
             <select class="js-example-basic-multiple form-control" name="categorie[]" multiple="multiple" style="width: 100%">
                 <!-- Option select 2 -->
                 <?php 
-                for ($i=0; $i < count($name_categorie) ; $i++) : ?>
-                    <option value="<?= $name_categorie[$i]['id']  ?>"><?= $name_categorie[$i]['libelle'] ?></option>
-                <?php endfor;?>
+                foreach ($name_categorie as $name_cat) : ?>
+                    <?php 
+                    var_dump(in_array($name_cat['libelle'],$cat_livre));
+                        if (in_array($name_cat['libelle'],$cat_livre)) {
+                            $selected = ' selected';
+                        }else {
+                            $selected = '';
+                        }
+                    ?>
+                    <option value="<?= $name_cat['id']  ?>" <?=$selected?> ><?= $name_cat['libelle'] ?></option>
+                <?php endforeach;?>
                 ?>
             </select>
         </div>
         <div class="col-4 mb-3">
             <label for="etat" class="form-label">Etat : </label>
-            <select class="js-example-basic-multiple form-control" name="etat[]" multiple="multiple" style="width: 100%">
+            <select class="js-example-basic-multiple form-control" name="etat[]">
                 <!-- Option select 2 -->
                 <?php 
                     foreach ($etats as $etat) : ?>
-                        <option value="<?= $etat['id']  ?>"><?= $etat['libelle'] ?></option>
+                    <?php 
+                        if (in_array($etat['libelle'],$etat_livre)) {
+                            $selected= ' selected';
+                        }else {
+                            $selected = '';
+                        }
+                    ?>
+                        <option value="<?= $etat['id']  ?>" <?= $selected ?>><?= $etat['libelle'] ?></option>
                     <?php endforeach;?>
                 ?>
             </select>

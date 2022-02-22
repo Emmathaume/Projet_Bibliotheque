@@ -9,7 +9,6 @@
 ?>
 <!-- AJOUTER UN LIVRE -->
 <?php 
-
     // verifier que le btn envoyer est le bon
     if (isset($_POST['btn_add_book'])) {
 
@@ -157,8 +156,8 @@
     if (isset($_POST['btn_update_book'])) {
         // enregistrer les infos dans des variables pour
         $id= intval($_POST['id']);
-        var_dump($_POST);
-        die;
+        // var_dump($_POST);
+        // die;
         if ( $id <= 0 ) {
             // erreur
             header ("location:index.php");
@@ -267,24 +266,74 @@
         }else {
             // **********CATEGORIES
             foreach ($_POST['categorie'] as $id_categorie) {
-                $sql_cat = "UPDATE categorie_livre SET id_categorie = :id_categorie, id_livre = :id_livre WHERE id = $id";
+
+                $sql_cat = 'UPDATE categorie_livre
+                SET categorie_livre.id_categorie = :id_categorie
+                WHERE categorie_livre.id_livre = :id ';
+
                 $req_cat = $bdd->prepare($sql_cat);
 
                 $data_cat = [
                     ':id_categorie' => $id_categorie,
-                    ':id_livre'=>$id_livre,
                     ':id'=>$id,
                 ];
 
                 if (!$req_cat->execute($data_cat)) {
-                    $_SESSION['error_add_book'] =false;
-                    header ("location:add.php");
+                    $_SESSION['error_update_book'] =false;
+                    header ("location:update.php?id=".$id);
                     die;
                 }
             }  
+            // **********AUTEURS
+            foreach ($_POST['auteur'] as $id_auteur) {
 
+                $sql_auteur = 'UPDATE auteur_livre
+                SET auteur_livre.id_auteur = :id_auteur
+                WHERE auteur_livre.id_livre = :id ';
 
+                $req_aut = $bdd->prepare($sql_auteur);
 
+                $data_aut = [
+                    ':id_auteur' => $id_auteur,
+                    ':id'=>$id,
+                ];
+
+                if (!$req_aut->execute($data_aut)) {
+                    $_SESSION['error_update_book'] =false;
+                    header ("location:update.php?id=".$id);
+                    die;
+                }
+            } 
+
+            // var_dump($_SESSION, $_POST);
+            $id_user = $_SESSION['user']['id'];
+            $id_livre = $_POST['id'];
+
+            if (isAdmin($bdd)) {
+                $id_role = 1;
+            }else{
+                $id_role = 2;
+            }
+
+            $sql_action = "INSERT INTO utilisateur_action VALUES (NULL, :id_user, NULL, :id_livre, NULL, NULL, :id_auteur, :id_categorie, :id_etat, :id_role, 2 , NULL,NOW())";
+
+            $req_action = $bdd->prepare($sql_action);
+
+            $data_action = [
+                ':id_user'=>$id_user,
+                ':id_livre'=>$id_livre,
+                ':id_auteur'=>$id_auteur,
+                ':id_categorie'=>$id_categorie,
+                ':id_etat'=> $id_etat,
+                ':id_role'=>$id_role,
+            ];
+
+            if (!$req_action->execute($data_action)) {
+                $_SESSION['error_update_book'] =false;
+                header ("location:update.php?id=".$id);
+                die;
+            }
+            // die;
 
 
 
