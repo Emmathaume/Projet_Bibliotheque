@@ -18,7 +18,7 @@
             //  + $option qui force l'encodage en utf8
             $bdd = new PDO ($dsn, $user, $password,$options);
         }catch (PDOException $e) {
-            // die ('Problème de bdd'); // ok ok 
+            // die ('Problème de bdd');
             echo 'erreur: ' . $e->getMessage(); // pour le dev
         }
 ?>

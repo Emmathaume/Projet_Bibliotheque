@@ -160,6 +160,7 @@
         // die;
         if ( $id <= 0 ) {
             // erreur
+            $_SESSION['error_update_book'] = false;
             header ("location:index.php");
             die;
         }
@@ -172,10 +173,8 @@
         $date_achat= htmlentities($_POST['date']);
         $id_etat = $_POST['etat']['0'];
 
-        // var_dump($_FILES['illustration']['name']);
         // avant de creer la requete on verifie si user a ajouter une illustration 'empty'
         if (!empty($_FILES['illustration']['name'])) {
-            // var_dump('cest pas vide');
 
             // si il change on recupere le nom de l'illustration
             $illustration = $_FILES['illustration']['name'];
@@ -194,15 +193,16 @@
             // $chemin_illustration = PATH_ADMIN . 'img/illustration/' . $hold_illustration;
             $chemin_illustration = SRC.'Img/' . $hold_illustration;
             var_dump($chemin_illustration);
-            // die;
             // avec is_file veirfier si l'ancienne image existe
             if (!is_file($chemin_illustration)) {
                 // s'il n'existe pas on repar a ajout user
+                $_SESSION['error_update_book'] = false;
                 header('location:update.php?id=' . $id);
                 die;
             }else {
                 // si on supprimer pas on repars vers id 
                 if (!unlink($chemin_illustration)) {
+                    $_SESSION['error_update_book'] = false;
                     header('location:update.php?id=' . $id);
                     die;
                 }
@@ -265,12 +265,19 @@
             die;
         }else {
             // **********CATEGORIES
+                // supprimer les occurence de categorie_livre pour réajouter les nvlles
+                $sql = "DELETE FROM categorie_livre WHERE id_livre = ?";
+                $req = $bdd->prepare($sql);
+                if (!$req->execute([$id])) {
+                    // erreur
+                    $_SESSION['error_update_book'] = false;
+                    header("location:update.php?id=$id");
+                    die;
+                }
+
             foreach ($_POST['categorie'] as $id_categorie) {
-
-                $sql_cat = 'UPDATE categorie_livre
-                SET categorie_livre.id_categorie = :id_categorie
-                WHERE categorie_livre.id_livre = :id ';
-
+                // onserer les nvlles occurences
+                $sql_cat = "INSERT INTO categorie_livre VALUES (:id_categorie, :id)";
                 $req_cat = $bdd->prepare($sql_cat);
 
                 $data_cat = [
@@ -283,13 +290,42 @@
                     header ("location:update.php?id=".$id);
                     die;
                 }
+                $id_user = $_SESSION['user']['id'];
+                if (isAdmin($bdd)) {
+                    $id_role = 1;
+                }else{
+                    $id_role = 2;
+                }
+                $sql_action = "INSERT INTO utilisateur_action VALUES (NULL, :id_user, NULL, :id_livre, NULL, NULL, :id_auteur, :id_categorie, :id_etat, :id_role, 2 , NULL,NOW())";
+                $req_action = $bdd->prepare($sql_action);
+                $data_action = [
+                    ':id_user'=>$id_user,
+                    ':id_livre'=>$id,
+                    ':id_auteur'=>$id_auteur,
+                    ':id_categorie'=>$id_categorie,
+                    ':id_etat'=> $id_etat,
+                    ':id_role'=>$id_role,
+                ];
+                if (!$req_action->execute($data_action)) {
+                    $_SESSION['error_update_book'] =false;
+                    header ("location:update.php?id=".$id);
+                    die;
+                }
             }  
+
             // **********AUTEURS
+            // supprimer les occurence de auteur_livre pour réajouter les nvlles
+            $sql = "DELETE FROM auteur_livre WHERE id_livre = ?";
+            $req = $bdd->prepare($sql);
+            if (!$req->execute([$id])) {
+                // erreur
+                $_SESSION['error_update_book'] = false;
+                header("location:update.php?id=$id");
+                die;
+            }
             foreach ($_POST['auteur'] as $id_auteur) {
 
-                $sql_auteur = 'UPDATE auteur_livre
-                SET auteur_livre.id_auteur = :id_auteur
-                WHERE auteur_livre.id_livre = :id ';
+                $sql_auteur = 'INSERT INTO auteur_livre VALUES (:id_auteur, :id, NOW())';
 
                 $req_aut = $bdd->prepare($sql_auteur);
 
@@ -303,39 +339,28 @@
                     header ("location:update.php?id=".$id);
                     die;
                 }
+                $id_user = $_SESSION['user']['id'];
+                if (isAdmin($bdd)) {
+                    $id_role = 1;
+                }else{
+                    $id_role = 2;
+                }
+                $sql_action = "INSERT INTO utilisateur_action VALUES (NULL, :id_user, NULL, :id_livre, NULL, NULL, :id_auteur, :id_categorie, :id_etat, :id_role, 2 , NULL,NOW())";
+                $req_action = $bdd->prepare($sql_action);
+                $data_action = [
+                    ':id_user'=>$id_user,
+                    ':id_livre'=>$id,
+                    ':id_auteur'=>$id_auteur,
+                    ':id_categorie'=>$id_categorie,
+                    ':id_etat'=> $id_etat,
+                    ':id_role'=>$id_role,
+                ];
+                if (!$req_action->execute($data_action)) {
+                    $_SESSION['error_update_book'] =false;
+                    header ("location:update.php?id=".$id);
+                    die;
+                }
             } 
-
-            // var_dump($_SESSION, $_POST);
-            $id_user = $_SESSION['user']['id'];
-            $id_livre = $_POST['id'];
-
-            if (isAdmin($bdd)) {
-                $id_role = 1;
-            }else{
-                $id_role = 2;
-            }
-
-            $sql_action = "INSERT INTO utilisateur_action VALUES (NULL, :id_user, NULL, :id_livre, NULL, NULL, :id_auteur, :id_categorie, :id_etat, :id_role, 2 , NULL,NOW())";
-
-            $req_action = $bdd->prepare($sql_action);
-
-            $data_action = [
-                ':id_user'=>$id_user,
-                ':id_livre'=>$id_livre,
-                ':id_auteur'=>$id_auteur,
-                ':id_categorie'=>$id_categorie,
-                ':id_etat'=> $id_etat,
-                ':id_role'=>$id_role,
-            ];
-
-            if (!$req_action->execute($data_action)) {
-                $_SESSION['error_update_book'] =false;
-                header ("location:update.php?id=".$id);
-                die;
-            }
-            // die;
-
-
 
 
             // on va vers l'index

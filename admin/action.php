@@ -24,7 +24,7 @@
         $utilisateur = $req->fetch(PDO::FETCH_ASSOC);
         // var_dump($utilisateur);
         
-        // si le fetch nous renvoie false alors on est pas connecter
+        // si le fetch nous renvoie false alors le mail n'existe pas
         if (!$utilisateur) {
             // le mail ou pseudo nexiste pas
             // creer un $_session qui enregistre l'erreur
@@ -47,17 +47,13 @@
         $_SESSION['user'] = $utilisateur;
             // L'heure de connexion
         $_SESSION['date_connect'] = new DateTime;
-        var_dump($_SESSION['user']['id']);
-        // die;
-        
+            // enregistrer son role et ses droits en session
         checkRoles($_SESSION['user']['id'],$bdd);
-        // die;
             // s'il est connecté
         $_SESSION['connect'] = true;
         // et on redirige vers index de admin
         header('location:index.php');
 
-        //*********** check role ????
         die;
     }
 ?>

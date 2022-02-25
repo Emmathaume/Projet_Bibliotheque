@@ -25,60 +25,32 @@
             $requete->execute(array($id));
             // fetch pour récupérer les infos de la bdd      
             $livres= $requete->fetch(PDO::FETCH_ASSOC);
-            // var_dump($livres);
-            // die;
-            // <!-- préselection categorie -->
-            // <?php 
-                $sql_cat = 'SELECT livre.id AS id_livre,categorie.id AS id_categorie, categorie.libelle
-                FROM categorie_livre 
-                INNER JOIN livre 
-                ON livre.id = categorie_livre.id_livre
-                INNER JOIN categorie
-                ON categorie.id = categorie_livre.id_categorie
-                WHERE livre.id = ?';
-
-                $req_cat= $bdd->prepare($sql_cat);
-                $req_cat->execute([$id]);
-                $cat_livre = $req_cat->fetchAll(PDO::FETCH_NUM);
-                $cat_livre = array_merge([],...$cat_livre);
-            
-
-                // <!-- preselection auteur -->
-                $sql_auteur = 'SELECT auteur.id as id_auteur, livre.id AS id_livre, auteur.nom_de_plume
-                FROM auteur_livre
-                INNER JOIN auteur 
-                ON auteur.id = auteur_livre.id_auteur
-                INNER JOIN livre
-                ON livre.id = auteur_livre.id_livre
-                WHERE livre.id = ?';
-
-                $req_auteur = $bdd->prepare($sql_auteur);
-                $req_auteur->execute([$id]);
-                $auteur_livre = $req_auteur->fetchAll(PDO::FETCH_NUM);
-                $auteur_livre = array_merge([],...$auteur_livre);
-
-
-                // <!-- préselection etat -->
-                $sql_etat = 'SELECT etat.id as id_etat, livre.id AS id_livre, etat.libelle
-                FROM etat_livre
-                INNER JOIN etat 
-                ON etat.id = etat_livre.id_etat
-                INNER JOIN livre
-                ON livre.id = etat_livre.id_livre
-                WHERE livre.id = ?';
-
-                $req_etat= $bdd->prepare($sql_etat);
-                $req_etat->execute([$id]);
-                $etat_livre = $req_etat->fetchAll(PDO::FETCH_ASSOC);
-                $etat_livre = $etat_livre[0];
-                // var_dump($etat_livre);
-
 
         }
         else {
             // rediriger vers index.php'
             header('location:index.php');
-        }  
+        }
+        // préselection categorie
+        $sql = "SELECT id_categorie FROM categorie_livre WHERE id_livre = ?";
+        $req = $bdd->prepare($sql);
+        $req->execute([$id]);
+        $categorie = $req->fetchAll(PDO::FETCH_NUM);
+        $categorie = array_merge([],...$categorie);
+
+        // <!-- preselection auteur -->
+        $sql_auteur = 'SELECT id_auteur FROM auteur_livre WHERE id_livre = ?';
+        $req_auteur = $bdd->prepare($sql_auteur);
+        $req_auteur->execute([$id]);
+        $auteur_livre = $req_auteur->fetchAll(PDO::FETCH_NUM);
+        $auteur_livre = array_merge([],...$auteur_livre);
+
+        // <!-- préselection etat -->
+        $sql_etat = 'SELECT id_etat FROM etat_livre WHERE id_livre = ?';
+        $req_etat= $bdd->prepare($sql_etat);
+        $req_etat->execute([$id]);
+        $etat_livre = $req_etat->fetchAll(PDO::FETCH_ASSOC);
+        $etat_livre = $etat_livre[0];
     }
 ?>
 
@@ -111,8 +83,6 @@
         $etats = $req->fetchAll(PDO::FETCH_ASSOC);
     ?>
 <!-- ******************************** -->
-
-
 
 
 <!DOCTYPE html>
@@ -177,7 +147,7 @@
                 <?php 
                     foreach ($name_auteurs as $name_auteur) : ?>
                     <?php
-                        if (in_array($name_auteur['nom_de_plume'], $auteur_livre)) {
+                        if (in_array($name_auteur['id'], $auteur_livre)) {
                             $selected = ' selected';
                         }else {
                             $selected = '';
@@ -195,8 +165,7 @@
                 <?php 
                 foreach ($name_categorie as $name_cat) : ?>
                     <?php 
-                    var_dump(in_array($name_cat['libelle'],$cat_livre));
-                        if (in_array($name_cat['libelle'],$cat_livre)) {
+                        if (in_array($name_cat['id'],$categorie)) {
                             $selected = ' selected';
                         }else {
                             $selected = '';
@@ -214,7 +183,7 @@
                 <?php 
                     foreach ($etats as $etat) : ?>
                     <?php 
-                        if (in_array($etat['libelle'],$etat_livre)) {
+                        if (in_array($etat['id'],$etat_livre)) {
                             $selected= ' selected';
                         }else {
                             $selected = '';
