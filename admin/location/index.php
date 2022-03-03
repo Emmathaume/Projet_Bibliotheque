@@ -1,7 +1,4 @@
-<!-- Afficher toutes les locations -->
-
 <?php include '../config/config.php'?>
-<!-- connexion a la bdd -->
 <?php include '../bdd.php';?>
 <?php  
     if (!isConnect()) {
@@ -31,74 +28,49 @@
 
     <?php include '../includes/topbar.php';?>
 
-    <!-- Recuperer les infos livres en bdd -->
+<!-- affichage infos livre -->
 <?php 
-    // creer la requete SQL
-    // $sql = 'SELECT * FROM livre';
-    $sql= "SELECT * FROM etat_livre INNER JOIN etat ON etat.id = etat_livre.id_etat INNER JOIN livre ON livre.id = etat_livre.id_livre";
-    // var_dump($sql);
-    // utilise la methode query pour envoyer la requete a la bdd -->
-    $requete = $bdd->query($sql);
-    // var_dump($requete);
-    // faire un fetchall pour permettre d'afficher toutes les occurence de la table récupéré
-    $livres= $requete->fetchAll(PDO::FETCH_ASSOC);
-    // var_dump($livres);
-    // die;
-
-?>
-
-
-<!-- table location -->
-
-<!-- recupere avec id usager son nom prenom mail  -->
-<!-- recuperer le livre avec son id son titre son illustration -->
-<!-- recuperer avec l'id de etat début le libellé dans la table etat -->
-
-<?php 
-
-$sql = 'SELECT usager.id as usager_id, usager.prenom, usager.nom, usager.mail, livre.titre, livre.illustration, livre.disponibilite, etat.libelle, location.id AS id_loc
-FROM location 
-INNER JOIN usager ON location.id_usager = usager.id 
-INNER JOIN livre ON location.id_livre = livre.id
-INNER JOIN etat_livre ON location.etat_debut = etat_livre.id_etat
-INNER JOIN etat ON etat_livre.id_etat = etat.id
-';
-
-$requete = $bdd -> query($sql);
-// var_dump($requete);
-
-$locations = $requete ->fetchAll(PDO::FETCH_ASSOC);
-var_dump($locations);
+    $sql = 'SELECT livre.titre,location.id AS id_loc,location.id_usager, location.id_livre, location.date_debut, location.date_fin, usager.nom, usager.prenom 
+    FROM location
+    INNER JOIN usager ON usager.id = location.id_usager
+    INNER JOIN livre ON livre.id = location.id_livre';
+    $req=$bdd->query($sql);
+    $locations = $req->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="container">
+    <h1 class="mb-4">Locations </h1>
     <table class="table table-bordered">
         <thead>
             <tr>
-            <!-- <th scope="col">#</th> -->
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">Titre du livre</th>
+            <th scope="col">Identité client</th>
+            <th scope="col">Date début</th>
+            <th scope="col">Date de fin</th>
             </tr>
         </thead>
         <tbody>
+            <?php foreach ($locations as $location) :?>
+                <?php 
+                $date_debut = new DateTime($location['date_debut']) ;
+                $dateDebut = $date_debut->format('d/m/Y');
+
+                if ($location['date_fin'] == null) {
+                    $dateFin = '';
+                }else {
+                    $date_fin = new DateTime($location['date_fin']);
+                    $dateFin = $date_fin->format('d/m/Y') ; 
+
+                }
+                ?>
             <tr>
-                <!-- <th scope="row">1</th> -->
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <td><?= $location['titre']?></td>
+                <td><?= $location['nom'],' '.  $location['prenom']?></td>
+                <td><?= $dateDebut?></td>
+                <td><?= $dateFin ?></td>
+                <td><a href="<?= URL_ADMIN?>location/update.php?id=<?= $location['id_loc']?>" class="btn btn-warning">Modifier</a></td>
             </tr>
-            <tr>
-                <!-- <th scope="row">2</th> -->
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <!-- <th scope="row">3</th> -->
-                <td>Larry the Bird</td>
-                <td>@twitter</td>
-            </tr>
+            <?php endforeach ?>
         </tbody>
     </table>
 </div>

@@ -96,3 +96,53 @@
         }
     }
 ?>
+
+<!-- function getCategories -->
+<?php 
+    function getCategories($_id_livre, $bdd) {
+        // genere la req sql pour recuperer les cat par rapport a un id livre
+        $sql = "SELECT categorie.libelle 
+        FROM categorie 
+        INNER JOIN categorie_livre ON categorie_livre.id_categorie = categorie.id
+        WHERE categorie_livre.id_livre = ? ";
+        // prepare
+        $req = $bdd->prepare($sql);
+        // execute
+        $req->execute([$_id_livre]);
+        // fetchAll
+        $categories = $req->fetchAll(PDO::FETCH_ASSOC);
+        // creer un tableau qui conteint les cat
+        $tab_cat = [];
+        // foreach pour récuperer la  valeur des sous tableau + implode pour les mettre en string
+        foreach ($categories as $cat){
+            $tab_cat[] = implode($cat);
+        }
+        // return implode (separateur, tableau)
+        return implode(', ', $tab_cat);
+    }
+?>
+
+<!-- function getAuteur -->
+<?php 
+    function getAuteurs($_id_livre, $bdd) {
+        // genere la req sql pour recuperer les cat par rapport a un id livre
+        $sql = "SELECT auteur.nom_de_plume
+        FROM auteur 
+        INNER JOIN auteur_livre ON auteur_livre.id_auteur = auteur.id
+        WHERE auteur_livre.id_livre = ? ";
+        // prepare
+        $req = $bdd->prepare($sql);
+        // execute
+        $req->execute([$_id_livre]);
+        // fetchAll
+        $auteurs = $req->fetchAll(PDO::FETCH_ASSOC);
+        // creer un tableau qui conteint les cat
+        $tab_aut = [];
+        // foreach pour récuperer la  valeur des sous tableau + implode pour les mettre en string
+        foreach ($auteurs as $aut){
+            $tab_aut[] = implode($aut);
+        }
+        // return implode (separateur, tableau)
+        return implode(', ', $tab_aut);
+    }
+?>

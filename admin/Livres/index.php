@@ -8,6 +8,7 @@
         die;
     }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -42,7 +43,7 @@
 ?>
 
 
-<div class="container">
+<div class="container-fluid">
     <!-- gestion alerte error -->
 <?php
     // AJOUT OK 
@@ -73,6 +74,8 @@
         <!-- <th scope="col">ID </th> -->
         <th scope="col">Num° ISBN </th>
         <th scope="col">Titre</th>
+        <th scope="col">Catégories</th>
+        <th scope="col">Auteurs</th>
         <th scope="col">Illustration</th>
         <th scope="col">Résumé</th>
         <th scope="col">Prix de location</th>
@@ -99,6 +102,8 @@
         <tr> 
             <td scope="row"><?= $livre['num_ISBN']?></td>
             <td><a href='<?=URL_ADMIN?>Livres/single.php?id=<?= $livre['id']?>'><?= $livre['titre']?> </a></td>
+            <td><?= getCategories($livre['id'], $bdd) ?></td>
+            <td><?= getAuteurs($livre['id'], $bdd) ?></td>
             <td><img src="<?= '../../Img/'. $livre['illustration']?>" height="100px" width="70px" alt="illustration du livre"></td>
             <td class="w-break"><?= substr($livre['resume'],0,100 )?></td>
             <td><?= $livre['prix']?> €</td>

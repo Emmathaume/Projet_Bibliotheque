@@ -52,9 +52,10 @@
                 </a>
                 <div id="location" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="<?= URL_ADMIN?>location/index.php">Voir tout</a>
-                        <a class="collapse-item" href="<?= URL_ADMIN?>location/add.php">Créer</a>
-                        <a class="collapse-item" href="">Voir locations en cours</a>
+                        <a class="collapse-item" href="">Locations en cours</a>
+                        <a class="collapse-item" href="<?= URL_ADMIN?>location/add.php">Créer une nouvelle location</a>
+                        <a class="collapse-item" href="<?= URL_ADMIN?>location/update.php">Cloturer une location</a>
+                        <a class="collapse-item" href="<?= URL_ADMIN?>location/index.php">Toutes les locations</a>
                     </div>
                 </div>
             </li>
@@ -119,7 +120,7 @@
                 </a>
                 <div id="editeur" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="<?= URL_ADMIN?>editeur/index.php">Voir tout</a>
+                        <a class="collapse-item" href="<?= URL_ADMIN?>editeur/index.php">Toutes les locs</a>
                         <a class="collapse-item" href="<?= URL_ADMIN?>editeur/add.php">Ajouter</a>
                         <a class="collapse-item" href="">Voir locations en cours</a>
                     </div>

@@ -12,16 +12,17 @@
     // verifier que le btn envoyer est le bon
     if (isset($_POST['btn_add_book'])) {
 
-        // *******ILLUSTRATION
+        //*******ILLUSTRATION
         // enregistrer le nom du tmp
         $tmp_name = $_FILES['illustration']['tmp_name'];
         // enregistrer le chemin de destination
-        $dir = PATH_ADMIN.'img/illustration';
-        // $dir = 'Img/illustration';
+        $dir = SRC.'Img/';
         // enregistrer le nom du fichier
         $name = $_FILES['illustration']['name'];
         // move_uploaded_file si ok on continue le script sinon retour index
         if (!move_uploaded_file($tmp_name, "$dir/$name")) {
+            echo ('jesuisla');
+            die;
             // erreur
             $_SESSION['error_add_book'] =false;
             header('location:add.php');
