@@ -44,6 +44,7 @@
         $req_auteur->execute([$id]);
         $auteur_livre = $req_auteur->fetchAll(PDO::FETCH_NUM);
         $auteur_livre = array_merge([],...$auteur_livre);
+        var_dump($auteur_livre);
 
         // <!-- préselection etat -->
         $sql_etat = 'SELECT id_etat FROM etat_livre WHERE id_livre = ?';

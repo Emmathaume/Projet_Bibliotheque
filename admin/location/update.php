@@ -33,12 +33,32 @@
   }  
 ?>
 
-<!-- SELECT2 etat -->
-<?php
-    $sql= 'SELECT * FROM etat';
-    $req = $bdd->query($sql);
-    $etats = $req->fetchAll(PDO::FETCH_ASSOC);
-?>
+<!-- select2 -->
+    <!-- SELECT2 etat-->
+    <?php
+        $sql= 'SELECT * FROM etat';
+        $req = $bdd->query($sql);
+        $etats = $req->fetchAll(PDO::FETCH_ASSOC);
+    ?>
+    <!-- Select2 livre-->
+    <?php
+        // recuperer les titres des livres disponible
+        // requet sql 
+        $sql = "SELECT id,titre FROM livre WHERE disponibilite = 0 " ;
+        // prepare
+        $req = $bdd->query($sql);
+        $titres = $req->fetchAll(PDO::FETCH_ASSOC);
+    ?>
+
+    <!-- Select2 usager -->
+    <?php
+        // recuperer les titres des livres disponible
+        // requet sql 
+        $sql = "SELECT id,nom,prenom FROM usager " ;
+        // prepare
+        $req = $bdd->query($sql);
+        $usagers = $req->fetchAll(PDO::FETCH_ASSOC);
+    ?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -72,16 +92,42 @@
     ?> -->
     <form class= "row" action="<?= URL_ADMIN?>location/action.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id_loc" value="<?= $id?>">
-        <input type="hidden" name="id_usager" value="<?= $infos_loc['id_usager']?>">
-        <input type="hidden" name="id_livre" value="<?= $infos_loc['id_livre']?>">
         <input type="hidden" name="etat_debut" value="<?= $infos_loc['etat_debut']?>">
         <div class="col-6 mb-3">
             <label for="titre" class="form-label">Titre :</label>
-            <input type="text" class="form-control" name="titre" value="<?= $infos_loc['titre']?>">
+            <select class="js-example-basic form-control" name="titre"  style="width: 100%">
+                <?php
+                    foreach ($titres as $titre) : ?>
+                    <?php 
+                        if ($titre['id'] == $infos_loc['id_livre']) {
+                            $selected = 'selected';
+                        }else{
+                            $selected = '';
+                        }
+                    ?>
+                        <option value="<?= $titre['id']?>" <?= $selected ?>><?= $titre['titre'] ?></option>
+                    <?php endforeach; ?>
+                ?>
+            </select>
+            <!-- <input type="text" class="form-control" name="titre" value="<?= $infos_loc['titre']?>"> -->
         </div>
         <div class="col-6 mb-3">
             <label for="nom_usager" class="form-label">Nom usager :</label>
-            <input type="text" class="form-control" name="nom_usager" value="<?= $infos_loc['nom'],' ' . $infos_loc['prenom']?>">
+            <select class="js-example-basic form-control" name="usager"  style="width: 100%">
+                <?php
+                    foreach($usagers as $usager) : ?>
+                    <?php
+                        if ($usager['id'] == $infos_loc['id_usager']) {
+                            $selected = 'selected';
+                        }else {
+                            $selected ='';
+                        }
+                    ?>
+                        <option value="<?= $usager['id']  ?>" <?=$selected ?>><?= $usager['nom'] ?>, <?= $usager['prenom']?></option>
+                    <?php endforeach; ?>
+                ?>
+            </select> 
+            <!-- <input type="text" class="form-control" name="nom_usager" value="<?= $infos_loc['nom'],' ' . $infos_loc['prenom']?>"> -->
         </div>
         <div class="col-6 mb-3">
             <label for="date_debut" class="form-label">Date de début :</label>

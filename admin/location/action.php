@@ -83,6 +83,7 @@
 <?php
     if (isset($_POST['btn_update_loc'])) {
         var_dump($_POST);
+        // die;
         // on enregistre toutes les infos 
         $id_loc = intval($_POST['id_loc']);
         if ($id_loc <= 0 ) {
@@ -91,8 +92,8 @@
             die;
         }
         $cloture = htmlentities($_POST['cloture']);
-        $id_usager = intval($_POST['id_usager']);
-        $id_livre = intval($_POST['id_livre']);
+        $id_usager = intval($_POST['usager']);
+        $id_livre = intval($_POST['titre']);
         $date_debut = htmlentities($_POST['date_debut']);
         $date_fin = htmlentities($_POST['date_fin']);
         $etat_debut = intval($_POST['etat_debut']);
