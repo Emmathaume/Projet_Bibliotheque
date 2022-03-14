@@ -60,7 +60,6 @@
                 }else {
                     $date_fin = new DateTime($location['date_fin']);
                     $dateFin = $date_fin->format('d/m/Y') ; 
-
                 }
                 ?>
             <tr>
