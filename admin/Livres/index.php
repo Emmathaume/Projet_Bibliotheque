@@ -52,7 +52,7 @@
         unset($_SESSION['error_add_book']);
     }
     // MODIF OK 
-    if (isset($_SESSION['error_update_book']) && $_SESSION['error_update_book'] = true) {
+    if (isset($_SESSION['error_update_book']) && $_SESSION['error_update_book'] == true) {
         alert ('success',"Votre livre à bien été modifié");    
         unset($_SESSION['error_update_book']);
     }

@@ -28,7 +28,6 @@
      */
     function checkRoles($id,$bdd) {
         if (intval($id<=0)) {
-            // ereur
             return false;
         }
         // creer la requete sql qui récupère le libelle du role suivant l'id utilisateur lié dans role_utilisateur
@@ -47,9 +46,6 @@
         if(count($roles) > 1 ){
             // si + de 1 role alors on merge les tableau
             $roles = array_merge($roles[0], $roles[1]);
-            // var_dump(array_merge($roles[0], $roles[1]));
-            // return $roles;
-            // die;
         }else {
             $roles = $roles[0];
         }
